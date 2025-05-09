@@ -41,3 +41,4 @@ struct MovieReducer: Reducer { // стан екран що містить всі
         }
     }
 }
+
