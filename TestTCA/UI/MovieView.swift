@@ -1,6 +1,9 @@
 import SwiftUI
 import ComposableArchitecture
 
+/// &language=en-US
+/// &page=\(page)
+
 struct MovieView: View {
     let store: StoreOf<MovieReducer>                        /// це типізований Store, який працює з нашим MovieReducer
     

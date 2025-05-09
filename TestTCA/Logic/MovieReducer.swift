@@ -3,8 +3,6 @@ import ComposableArchitecture
 
 struct MovieReducer: Reducer {                           /// Відповідає за обробку дій та оновлення стану
     
-    @Dependency(\.movieClientEffect) var movieClient
-    
     struct State: Equatable {                            /// State представляє поточний стан вашого модуля /  Equatable дозволяє порівнювати стани
         var movies: [Movie] = []
         var isLoading = false
@@ -23,7 +21,12 @@ struct MovieReducer: Reducer {                           /// Відповіда�
             state.isLoading = true
             return .run { send in  /// run  Щоб запустити асинхронний запит чи будь-який побічний ефект
                 await send(.moviesResponse(TaskResult {
-                    try await movieClient.getMovies()
+                    let url = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=7b6b44608b3d5f7efb2bd09bca9d5ff8")!
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let response = try decoder.decode(MovieResponse.self, from: data)
+                    return response.results
                 }))
             }
             
