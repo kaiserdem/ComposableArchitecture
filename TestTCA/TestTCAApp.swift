@@ -8,10 +8,21 @@ struct TestTCAApp: App {
         
         WindowGroup {                                 /// WindowGroup - контейнер для вікна додатку
             
-            MovieView(store: Store(                   /// Store - контейнер, який зберігає стан та керує логікою для конкретного модуля/екрану
-                initialState: MovieReducer.State(),   /// створюємо початковий стан
-                reducer: { MovieReducer() }           /// reducer - функція, яка обробляє дії та оновлює стан
-            ))
+//            MovieView(store: Store(                   /// Store - контейнер, який зберігає стан та керує логікою для конкретного модуля/екрану
+//                initialState: MovieReducer.State(),   /// створюємо початковий стан
+//                reducer: { MovieReducer() }           /// reducer - функція, яка обробляє дії та оновлює стан
+//            ))
+            
+//            StrongFirstView()
+            
+//            CounterSimpleView(store: Store(initialState: CounterSimpleReducer.State(), reducer: {
+//                CounterSimpleReducer()
+//            }))
+            
+            CounterLoadingView(store: Store(initialState: CounterLoadingReducer.State(),
+                                            reducer: {
+                CounterLoadingReducer()
+            }))
         }
     }
 }
