@@ -14,15 +14,16 @@ struct TestTCAApp: App {
 //            ))
             
 //            StrongFirstView()
+              StrongView1()
             
 //            CounterSimpleView(store: Store(initialState: CounterSimpleReducer.State(), reducer: {
 //                CounterSimpleReducer()
 //            }))
             
-            CounterLoadingView(store: Store(initialState: CounterLoadingReducer.State(),
-                                            reducer: {
-                CounterLoadingReducer()
-            }))
+//            CounterLoadingView(store: Store(initialState: CounterLoadingReducer.State(),
+//                                            reducer: {
+//                CounterLoadingReducer(counterEffect: CounterEffect())
+//            }))
         }
     }
 }

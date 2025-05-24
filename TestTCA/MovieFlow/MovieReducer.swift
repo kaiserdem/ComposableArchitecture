@@ -43,7 +43,6 @@ struct MovieReducer: Reducer {                           /// Відповіда�
             state.movies = movies
             state.isLoading = false
             return .none
-            
         case let .moviesResponse(.failure(error)):
             state.error = error.localizedDescription
             state.isLoading = false

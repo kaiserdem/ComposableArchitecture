@@ -546,8 +546,83 @@ struct StringTestView: View {
 }
 */
 
-// MARK: -                                                      _
-// MARK: -                                                      _
+// MARK: -                                                     SafeBankAccount безпечне оновлення з кількома потоками
+
+/*
+ class SafeBankAccount {
+     private var balance: Int = 0
+     private let queue = DispatchQueue(label: "com.example.bankAccountQueue")
+     
+     // Метод депозиту
+     func deposit(amount: Int) {
+         queue.sync {
+             balance += amount
+             print("Deposited \(amount), new balance: \(balance)")
+         }
+     }
+     
+     // Метод зняття
+     func withdraw(amount: Int) {
+         queue.sync {
+             if balance >= amount {
+                 balance -= amount
+                 print("Withdrew \(amount), new balance: \(balance)")
+             } else {
+                 print("Not enough balance to withdraw \(amount)")
+             }
+         }
+     }
+     
+     // Текущий баланс
+     func getBalance() -> Int {
+         return queue.sync {
+             return balance
+         }
+     }
+ }
+
+ // Створимо об'єкт і запустимо кілька потоків
+ let account = SafeBankAccount()
+
+ DispatchQueue.global().async {
+     account.deposit(amount: 100)
+ }
+
+ DispatchQueue.global().async {
+     account.withdraw(amount: 50)
+ }
+
+ DispatchQueue.global().async {
+     account.deposit(amount: 200)
+ }
+
+ DispatchQueue.global().async {
+     print("Final balance: \(account.getBalance())")
+ }
+ */
+
+// MARK: -                                                      Associatedtype
+
+protocol Container {
+    associatedtype Item  
+    func add(item: Item)
+    func getItems() -> [Item]
+}
+
+struct IntContainer: Container {
+    typealias Item = Int
+    
+    private var items: [Int] = []
+    
+    func add(item: Int) {
+        var mutableSelf = self
+        mutableSelf.items.append(item)
+    }
+    func getItems() -> [Int] {
+        return items
+    }
+}
+
 // MARK: -                                                      _
 // MARK: -                                                      _
 // MARK: -                                                      _

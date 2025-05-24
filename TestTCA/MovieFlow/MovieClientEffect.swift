@@ -7,7 +7,7 @@ struct MovieClientEffect {                              ///Клієнт для �
     var getMovies: @Sendable() async throws -> [Movie]  /// це кложур аcінхронний async - не блокує поток
                                                         /// @Sendable- може беспечно повертати значення на різних потока х в данному випадку масив,  throws - видає помилки,
     
-    var getMovieDetails: @Sendable (Int) async throws -> MovieThemoviedb
+    //var getMovieDetails: @Sendable (Int) async throws -> MovieThemoviedb
 }
 
                                                  
@@ -30,20 +30,20 @@ extension MovieClientEffect: DependencyKey {     /// DependencyKey  - Реєст
             return movieResponse.results
         },
         
-        getMovieDetails: { id in
-            let url = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\("7b6b44608b3d5f7efb2bd09bca9d5ff8")")!
-            print("🌐 Запит до API (деталі фільму): \(url)")
-            
-            let (data, response) = try await URLSession.shared.data(from: url)
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print("📡 Статус відповіді: \(httpResponse.statusCode)")
-            }
-            
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return try decoder.decode(MovieThemoviedb.self, from: data)
-        }
+//        getMovieDetails: { idlive in
+//            let url = URL(string: "https://api.themoviedb.org/3/movie/\(id)?api_key=\("7b6b44608b3d5f7efb2bd09bca9d5ff8")")!
+//            print("🌐 Запит до API (деталі фільму): \(url)")
+//            
+//            let (data, response) = try await URLSession.shared.data(from: url)
+//            
+//            if let httpResponse = response as? HTTPURLResponse {
+//                print("📡 Статус відповіді: \(httpResponse.statusCode)")
+//            }
+//            
+//            let decoder = JSONDecoder()
+//            decoder.keyDecodingStrategy = .convertFromSnakeCase
+//            return try decoder.decode(MovieThemoviedb.self, from: data)
+//        }
     )
 }
 
