@@ -165,23 +165,8 @@ struct StrongView2: View {
         
     }
 }
-protocol Container {
-    associatedtype Item  // Це "зв’язаний" тип, який обирає реалізація
-    func add(item: Item)
-    func getItems() -> [Item]
-}
 
-class Parent1: Container {
-    func add(item: Int) {
-        var mutableSelf = self
-               mutableSelf.items.append(item)
-    }
-    
-    func getItems() -> [Int] {
-        
-    }
-    
-    typealias Item = Int
+class Parent1 {
     
     var pet1: Pet1?
     

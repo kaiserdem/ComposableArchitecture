@@ -115,31 +115,4 @@ struct CounterEffect: CounterEffectProtocol {
     }
 }
 
-//struct CounterEffect {                                          // Екземпляр для асинхронних ефектів — реалізація поведінки
-//    var incremet: @Sendable () async throws -> Int
-//    var decrement: @Sendable () async throws -> Int             // Це кложур, що повертають число по `async/await`
-//    
-//    static let live = Self (                                    // Стандартна "живий" реалізація — із імітацією затримки
-//        incremet: {
-//            try await Task.sleep(for: .seconds(1))
-//            return 1
-//        },
-//        decrement: {
-//            try await Task.sleep(for: .seconds(1))
-//            return -1
-//        }
-//    )
-//}
-//
-//private enum CounterEffectKey: DependencyKey {                   // Задаємо ключ для Dependency — щоб системно зберігати і отримувати
-//    static var liveValue = CounterEffect.live                    // Вміст залежності
-//}
-//
-//extension DependencyValues {                                     // Додаємо в DependencyValues розширення для доступу до
-//    var counterEffect: CounterEffect {
-//        get { self[CounterEffectKey.self] }
-//        set { self[CounterEffectKey.self] = newValue }
-//    }
-//}
-
 
