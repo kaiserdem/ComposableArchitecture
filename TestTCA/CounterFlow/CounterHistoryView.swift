@@ -13,67 +13,78 @@ struct CounterHistoryView: View {
     let store: StoreOf<CounterHistoryReducer>
     
     var body: some View {
-        
-        WithViewStore(store, observe: {$0}) { viewStore in
-            
-            ZStack {
-                VStack {
-                    Spacer()
-                    if viewStore.isLoading {
-                        ProgressView()
+        NavigationStack {
+            WithViewStore(store, observe: {$0}) { viewStore in
+                
+                ZStack {
+                    VStack {
+                        Spacer()
+                        if viewStore.isLoading {
+                            ProgressView()
+                        }
+                        Spacer()
+                        Spacer()
                     }
-                    Spacer()
-                    Spacer()
-                }
-                VStack {
-                    
-                    Picker("",selection: viewStore.binding(
-                        get: \.step,
-                        send: {.step($0) }
-                    )) {
-                        Text("1").tag(1)
-                        Text("2").tag(2)
-                        Text("3").tag(3)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding()
-                    
-                    Text("\(viewStore.state.count)")
-                        .font(.title)
-                    
-                    
-                    HStack {
-                        Button("+") {
-                            viewStore.send(.incrementTapped)
+                    VStack {
+                        
+                        Button("Go To History View") {
+                            viewStore.send(.setHistoryView(true))
+                        }
+                        
+                        Picker("",selection: viewStore.binding(
+                            get: \.step,
+                            send: {.step($0) }
+                        )) {
+                            Text("1").tag(1)
+                            Text("2").tag(2)
+                            Text("3").tag(3)
+                        }
+                        .pickerStyle(.segmented)
+                        .padding()
+                        
+                        Text("\(viewStore.state.count)")
+                            .font(.title)
+                        
+                        
+                        HStack {
+                            Button("+") {
+                                viewStore.send(.incrementTapped)
+                            }
+                            .padding()
+                            .border(.black)
+                            
+                            Button("-") {
+                                viewStore.send(.decrementTapped)
+                            }
+                            .padding()
+                            .border(.black)
+                        }
+                        Button("Reset All") {
+                            viewStore.send(.resetAll)
                         }
                         .padding()
                         .border(.black)
                         
-                        Button("-") {
-                            viewStore.send(.decrementTapped)
-                        }
-                        .padding()
-                        .border(.black)
                     }
-                    Button("Reset All") {
-                        viewStore.send(.resetAll)
-                    }
-                    .padding()
-                    .border(.black)
-                    
                 }
-            }
-            .alert(isPresented: viewStore.binding(
-                get: \.showErrorAlert,
-                send: { .setShawAlert($0) }
-            )) {
-                Alert(title:
-                        Text("Error"),
-                      message:
-                        Text("\(viewStore.state.errorMessage ?? "No Error")"),
-                      dismissButton: .default(Text("OK")) {
-                    viewStore.send(.setShawAlert(false))
-                })
+                .navigationDestination(isPresented: viewStore.binding(
+                    get: \.showHistoryView,
+                    send: {.setHistoryView($0)}
+                )) {
+                    CounterHistoryListView(store: store)
+                }
+                .alert(isPresented: viewStore.binding(
+                    get: \.showErrorAlert,
+                    send: { .setShawAlert($0) }
+                )) {
+                    Alert(title:
+                            Text("Error"),
+                          message:
+                            Text("\(viewStore.state.errorMessage ?? "No Error")"),
+                          dismissButton: .default(Text("OK")) {
+                        viewStore.send(.setShawAlert(false))
+                    })
+                }
             }
         }
     }
@@ -87,6 +98,8 @@ struct CounterHistoryReducer: Reducer {
         var step: Int = 1
         var showErrorAlert: Bool = false
         var errorMessage: String? = nil
+        var showHistoryView: Bool = false
+        var history: [Int] = []
     }
     
     enum Action {
@@ -98,6 +111,8 @@ struct CounterHistoryReducer: Reducer {
         case resetAll
         case setShawAlert(Bool)
         case error(String)
+        case setHistoryView(Bool)
+        case addToHistory(Int)
     }
     
     let effect: CounterHistoryEffectProtocol
@@ -136,13 +151,13 @@ struct CounterHistoryReducer: Reducer {
         case .incrementAsync(let value):
             state.isLoading = false
             state.count = value
-            return .none
+            return .send(.addToHistory(value))
             
         case .decrementAsync(let value):
             state.isLoading = false
             state.count = value
-            return .none
-            
+            return .send(.addToHistory(value))
+
         case .step(let step):
             state.step = step
             return .none
@@ -165,6 +180,14 @@ struct CounterHistoryReducer: Reducer {
                 state.errorMessage = nil
             }
             return .none
+            
+        case .setHistoryView(let isPresented):
+            state.showHistoryView = isPresented
+            return .none
+            
+        case .addToHistory(let value):
+            state.history.append(value)
+            return .none
         }
     }
 }
@@ -179,18 +202,34 @@ protocol CounterHistoryEffectProtocol {
 struct CounterHistoryEffect: CounterHistoryEffectProtocol {
     let errorProbability: Double = 0.25
     func increment(_ step: Int, _ currentCount: Int) async throws -> Int {
-        try await Task.sleep(for: .seconds(1))
+        try await Task.sleep(for: .seconds(0))
         if Double.random(in: 0...1) < errorProbability {
             throw NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey : "Error increment"])
         }
         return currentCount + step
     }
     func decrement(_ step: Int, _ currentCount: Int) async throws -> Int {
-        try await Task.sleep(for: .seconds(1))
+        try await Task.sleep(for: .seconds(0))
         if Double.random(in: 0...1) < errorProbability {
             throw NSError(domain: "", code: 1, userInfo: [NSLocalizedDescriptionKey : "Error decrement"])
         }
         return currentCount - step
+    }
+}
+
+struct CounterHistoryListView: View {
+    let store: StoreOf<CounterHistoryReducer>
+    
+    var body: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            List {
+                ForEach(viewStore.history, id: \.self) { item in
+                    HStack {
+                        Text("\(item)")
+                    }
+                }
+            }
+        }
     }
 }
 
