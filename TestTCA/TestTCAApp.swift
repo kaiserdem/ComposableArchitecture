@@ -25,8 +25,12 @@ struct TestTCAApp: App {
 //                CounterLoadingReducer(counterEffect: CounterEffect())
 //            }))
             
-            CounterStepResetErrorView(store: Store(initialState: CounterStepEReducer.State(), reducer: {
-                CounterStepEReducer(effect: CounterStepEEffect())
+//            CounterStepResetErrorView(store: Store(initialState: CounterStepEReducer.State(), reducer: {
+//                CounterStepEReducer(effect: CounterStepEEffect())
+//            }))
+            
+            CounterHistoryView(store: Store(initialState: CounterHistoryReducer.State(), reducer: {
+                CounterHistoryReducer(effect: CounterHistoryEffect())
             }))
         }
     }
