@@ -1,9 +1,3 @@
-//
-//  CounterStepErrorView.swift
-//  TestTCA
-//
-//  Created by Yaroslav Golinskiy on 25/05/2025.
-//
 
 import ComposableArchitecture
 import SwiftUI

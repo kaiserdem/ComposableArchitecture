@@ -1,9 +1,3 @@
-//
-//  CounterView.swift
-//  TestTCA
-//
-//  Created by Yaroslav Golinskiy on 12/05/2025.
-//
 
 import SwiftUI
 import ComposableArchitecture

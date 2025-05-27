@@ -333,7 +333,7 @@ performImmediateTask {
 
 
 // MARK: -                                                              Counter
-
+/*
 import SwiftUI
 import ComposableArchitecture
 
@@ -392,6 +392,7 @@ struct CounterReducer: Reducer {
         }
     }
 }
+*/
 
 // MARK: -                                                         Counter + Effect
 /*
