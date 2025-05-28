@@ -33,9 +33,15 @@ struct TestTCAApp: App {
 //                CounterHistoryReducer(effect: CounterHistoryEffect())
 //            }))
             
-            CounterView(store: Store(initialState: CounterReducer1.State(), reducer: {
-                CounterReducer1(effect: CounterEffect1())
-            }))
+//            CounterView(store: Store(initialState: CounterReducer1.State(), reducer: {
+//                CounterReducer1(effect: CounterEffect1())
+//            }))
+            
+            TabView(
+                store: Store( initialState: TabState(),
+                    reducer: { TabReducer() }
+                )
+            )
         }
     }
 }
