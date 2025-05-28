@@ -29,35 +29,19 @@ enum TabAction {
                                                       /// Головний reducer додатку, що обробляє всі дії та оновлює стан
 struct TabReducer: Reducer {
     var body: some Reducer<TabState, TabAction> {
-                                                      // Об'єднуємо кілька reducer'ів для обробки різних частин стану
-        CombineReducers {
-                                                      // Перший reducer - обробляє зміну вкладки
-            Reduce { state, action in
-                switch action {
-                case .setSelectedTab(let tab):
-                                                      // Оновлюємо активну вкладку
-                    state.selectedTab = tab
-                    return .none
-                case .counter:
-                                                      // Ігноруємо дії лічильника в цьому reducer'і
-                    return .none
-                }
-            }
-            
-                                                     // Другий reducer - обробляє дії лічильника
-            Reduce { state, action in
-                switch action {
-                case .counter(let counterAction):
-                                                     // Створюємо reducer лічильника і обробляємо його дію
-                    let effect = CounterTabReducer(effect: CounterTabEffect())
-                        .reduce(into: &state.counterState, action: counterAction)
-                                                    // Перетворюємо ефект з дії лічильника в дію вкладки
-                                                    // @Sendable вказує, що функція перетворення є потокобезпечною
-                    return effect.map { @Sendable in TabAction.counter($0) }
-                case .setSelectedTab:
-                                                     // Ігноруємо зміну вкладки в цьому reducer'і
-                    return .none
-                }
+        Reduce { state, action in
+            switch action {
+            case .setSelectedTab(let tab):
+                                                       // Оновлюємо активну вкладку
+                state.selectedTab = tab
+                return .none
+                
+            case .counter(let counterAction):
+                                                        // Створюємо reducer лічильника і обробляємо його дію
+                let effect = CounterTabReducer(effect: CounterTabEffect())
+                    .reduce(into: &state.counterState, action: counterAction)
+                                                        // Перетворюємо ефект з дії лічильника в дію вкладки
+                return effect.map { @Sendable in TabAction.counter($0) }
             }
         }
     }
